@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div class="project-item" v-for="(item, index) in project" :key="index" >
+    <a class="project-item" href="/#/project/module" v-for="(item, index) in project" :key="index" >
       <el-card shadow="always">
         <div class="project-item-detail">
           <img role="presentation" src="http://terminus-paas.oss-cn-hangzhou.aliyuncs.com/upload/images/fd479181-7e85-41a1-a524-dcb46132ba57.jpg">
@@ -9,7 +9,7 @@
           {{ item.id }}: {{ item.name }}
         </div>
       </el-card>
-    </div>
+    </a>
   </div>
 </template>
 
