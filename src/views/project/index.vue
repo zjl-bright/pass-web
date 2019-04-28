@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <a class="project-item" href="/#/project/module" v-for="(item, index) in project" :key="index" >
+    <a v-for="(item, index) in project" :key="index" class="project-item" href="/#/project/module">
       <el-card shadow="always">
         <div class="project-item-detail">
           <img role="presentation" src="http://terminus-paas.oss-cn-hangzhou.aliyuncs.com/upload/images/fd479181-7e85-41a1-a524-dcb46132ba57.jpg">
@@ -14,14 +14,22 @@
 </template>
 
 <script>
+import { getProject } from '@/api/project'
+
 export default {
   data() {
     return {
-      project: [
-        { id: '1', name: '测试项目1', des: '项目描述1' },
-        { id: '2', name: '测试项目2', des: '项目描述2' },
-        { id: '3', name: '测试项目3', des: '项目描述3' }
-      ]
+      project: null
+    }
+  },
+  created() {
+    this.fetchData()
+  },
+  methods: {
+    fetchData() {
+      getProject().then(response => {
+        this.project = response.data
+      })
     }
   }
 }
