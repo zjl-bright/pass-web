@@ -47,20 +47,20 @@ export default {
       padding: 40px 0;
       height: 180px;
       -webkit-transition: .3s;
-      transition: .3s;  
+      transition: .3s;
 
       img {
-        width: 100px; 
+        width: 100px;
         height: 100px;
         -webkit-transition: .3s;
-        transition: .3s;  
+        transition: .3s;
       }
 
       &:hover {
         padding: 0;
 
         img {
-          width: 200px; 
+          width: 200px;
           height: 200px;
         }
       }
