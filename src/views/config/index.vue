@@ -89,13 +89,13 @@
         </el-tooltip>
       </el-form-item>
       <el-form-item label="日志目录" prop="logDir">
-        <el-tooltip placement="right" effect="light">
+        <el-tooltip ref="logDir" placement="right" effect="light" :manual="true">
           <div slot="content">
             在这里指定容器内日志的保存位置后,
             <br>
             可通过平台查看容器内日志内容
           </div>
-          <el-input v-model="formLabelAlign.logDir" placeholder="请输入日志目录" />
+          <el-input v-model="formLabelAlign.logDir" placeholder="请输入日志目录" @focus="onFocus('logDir')" />
         </el-tooltip>
       </el-form-item>
       <!-- submit -->
@@ -115,7 +115,7 @@ export default {
     // }
     return {
       labelPosition: 'right',
-      // tooltip: true,
+      tooltip: true,
       formLabelAlign: {
         target: '',
         buildCmd: '',
@@ -160,6 +160,11 @@ export default {
           return false
         }
       })
+    },
+    onFocus(refName) {
+      debugger
+      // this.$refs[refName].$refs.popper.hidden = false
+      // console.log("fo")
     },
     onCancel() {
       this.$message({
