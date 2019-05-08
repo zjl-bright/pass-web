@@ -8,13 +8,19 @@
     <el-form ref="formLabelAlign" :label-position="labelPosition" :model="formLabelAlign" :rules="rules" label-width="80px" class="module-config-form">
       <!-- 打包配置 -->
       <el-form-item label="目标路径" prop="target">
-        <el-tooltip content="执行 Dockerfile 的目标路径, 从工程根目录算起" placement="right" effect="light">
-          <el-input v-model="formLabelAlign.target" placeholder="请输入目标路径" />
+        <el-tooltip ref="target" placement="right" effect="light" :manual="true" :value="tooltip.target">
+          <div slot="content">
+            执行 Dockerfile 的目标路径, 从工程根目录算起
+          </div>
+          <el-input v-model="formLabelAlign.target" placeholder="请输入目标路径" @focus="toggleTooltip('target', true)" @blur="toggleTooltip('target', false)" />
         </el-tooltip>
       </el-form-item>
       <el-form-item label="打包命令" prop="buildCmd">
-        <el-tooltip content="打包应用的命令, 在工程根目录执行, 可以填写多行" placement="right" effect="light">
-          <el-input v-model="formLabelAlign.buildCmd" type="textarea" :autosize="{ minRows: 1, maxRows: 10}" placeholder="请输入打包命令" />
+        <el-tooltip ref="buildCmd" placement="right" effect="light" :manual="true" :value="tooltip.buildCmd">
+          <div slot="content">
+            打包应用的命令, 在工程根目录执行, 可以填写多行
+          </div>
+          <el-input v-model="formLabelAlign.buildCmd" type="textarea" :autosize="{ minRows: 1, maxRows: 10}" placeholder="请输入打包命令" @focus="toggleTooltip('buildCmd', true)" @blur="toggleTooltip('buildCmd', false)" />
         </el-tooltip>
       </el-form-item>
       <el-form-item label="Dockerfile" prop="dockerFileType">
@@ -24,28 +30,28 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item v-if="formLabelAlign.dockerFileType == 1" label="内容" prop="dockerFileContent">
-        <el-tooltip placement="right" effect="light">
+        <el-tooltip ref="dockerFileContent" placement="right" effect="light" :manual="true" :value="tooltip.dockerFileContent">
           <div slot="content">
             Dockerfile ，会被复制到目标路径下
             <br>
             执行以便生成 Docker Image
           </div>
-          <el-input v-model="formLabelAlign.dockerFileContent" type="textarea" :autosize="{ minRows: 6, maxRows: 10}" placeholder="请输入内容" />
+          <el-input v-model="formLabelAlign.dockerFileContent" type="textarea" :autosize="{ minRows: 6, maxRows: 10}" placeholder="请输入内容" @focus="toggleTooltip('dockerFileContent', true)" @blur="toggleTooltip('dockerFileContent', false)" />
         </el-tooltip>
       </el-form-item>
       <el-form-item v-else label="路径" prop="dockerFilePath">
-        <el-tooltip placement="right" effect="light">
+        <el-tooltip ref="dockerFilePath" placement="right" effect="light" :manual="true" :value="tooltip.dockerFilePath">
           <div slot="content">
             Dockerfile 路径，从工程根目录算起,
             <br>
             会被复制到目标路径下执行以便生成 Docker Image
           </div>
-          <el-input v-model="formLabelAlign.dockerFilePath" placeholder="请输入路径" />
+          <el-input v-model="formLabelAlign.dockerFilePath" placeholder="请输入路径" @focus="toggleTooltip('dockerFilePath', true)" @blur="toggleTooltip('dockerFilePath', false)" />
         </el-tooltip>
       </el-form-item>
       <!-- 部署配置 -->
       <el-form-item label="端口映射" prop="ports">
-        <el-tooltip placement="right" effect="light">
+        <el-tooltip ref="ports" placement="right" effect="light" :manual="true" :value="tooltip.ports">
           <div slot="content">
             Docker 内外暴露的端口，格式为[外部端口: ]内部
             <br>
@@ -67,11 +73,11 @@
             <br>
             随机端口 写入 container 内。
           </div>
-          <el-input v-model="formLabelAlign.ports" type="textarea" :autosize="{ minRows: 2, maxRows: 5}" placeholder="请输入端口" />
+          <el-input v-model="formLabelAlign.ports" type="textarea" :autosize="{ minRows: 1, maxRows: 4}" placeholder="请输入端口" @focus="toggleTooltip('ports', true)" @blur="toggleTooltip('ports', false)" />
         </el-tooltip>
       </el-form-item>
       <el-form-item label="环境变量" prop="env">
-        <el-tooltip placement="right" effect="light">
+        <el-tooltip ref="env" placement="right" effect="light" :manual="true" :value="tooltip.env">
           <div slot="content">
             写入 container 内的环境变量，格式为：
             <br>
@@ -85,17 +91,17 @@
             <br>
             TERMINUS_HOST=宿主机IP 。
           </div>
-          <el-input v-model="formLabelAlign.env" type="textarea" :autosize="{ minRows: 10, maxRows: 15}" placeholder="请输入环境变量" />
+          <el-input v-model="formLabelAlign.env" type="textarea" :autosize="{ minRows: 10, maxRows: 15}" placeholder="请输入环境变量" @focus="toggleTooltip('env', true)" @blur="toggleTooltip('env', false)" />
         </el-tooltip>
       </el-form-item>
       <el-form-item label="日志目录" prop="logDir">
-        <el-tooltip ref="logDir" placement="right" effect="light" :manual="true">
+        <el-tooltip ref="logDir" placement="right" effect="light" :manual="true" :value="tooltip.logDir">
           <div slot="content">
             在这里指定容器内日志的保存位置后,
             <br>
             可通过平台查看容器内日志内容
           </div>
-          <el-input v-model="formLabelAlign.logDir" placeholder="请输入日志目录" @focus="onFocus('logDir')" />
+          <el-input v-model="formLabelAlign.logDir" placeholder="请输入日志目录" @focus="toggleTooltip('logDir', true)" @blur="toggleTooltip('logDir', false)" />
         </el-tooltip>
       </el-form-item>
       <!-- submit -->
@@ -111,11 +117,18 @@
 export default {
   data() {
     // const clearValidate = () => {
-    //   console.log('1')
     // }
     return {
       labelPosition: 'right',
-      tooltip: true,
+      tooltip: {
+        target: false,
+        buildCmd: false,
+        dockerFileContent: false,
+        dockerFilePath: false,
+        ports: false,
+        env: false,
+        logDir: false
+      },
       formLabelAlign: {
         target: '',
         buildCmd: '',
@@ -161,10 +174,11 @@ export default {
         }
       })
     },
-    onFocus(refName) {
-      debugger
+    // TODO 数据流双向绑定
+    toggleTooltip(refName, flag) {
+      this.tooltip[refName] = flag
+      // this.$refs[refName].$set(this.$refs[refName], 'value', true)
       // this.$refs[refName].$refs.popper.hidden = false
-      // console.log("fo")
     },
     onCancel() {
       this.$message({

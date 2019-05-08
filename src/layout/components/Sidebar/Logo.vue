@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-      title: 'Vue Admin Template',
+      title: 'HSH PaaS',
       logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
     }
   }
@@ -47,7 +47,7 @@ export default {
   height: 50px;
   line-height: 50px;
   background: #2b2f3a;
-  text-align: center;
+  // text-align: center;
   overflow: hidden;
 
   & .sidebar-logo-link {
@@ -58,7 +58,7 @@ export default {
       width: 32px;
       height: 32px;
       vertical-align: middle;
-      margin-right: 12px;
+      margin: 0 12px 0 20px;
     }
 
     & .sidebar-title {
@@ -67,15 +67,17 @@ export default {
       color: #fff;
       font-weight: 600;
       line-height: 50px;
-      font-size: 14px;
+      font-size: 18px;
       font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
       vertical-align: middle;
     }
   }
 
   &.collapse {
+    text-align: center;
+
     .sidebar-logo {
-      margin-right: 0px;
+      margin: 0px;
     }
   }
 }
