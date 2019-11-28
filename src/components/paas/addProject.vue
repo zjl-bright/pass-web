@@ -21,14 +21,31 @@
       <el-form-item prop="dirName" label="目录名称:">
         <el-input v-model="project.dirName" placeholder="请输入目录名称" />
       </el-form-item>
+      <el-form-item label="环境">
+        <el-input v-model="typeName" placeholder="请输入环境名称" >
+          <el-button slot="append" @click="handlePushType">添加</el-button>
+        </el-input>
+        <div class="tag-box">
+          <el-tag
+            v-for="(tag, index) in project.types"
+            :key="index"
+            :disable-transitions="false"
+            class="check-item-tag"
+            closable
+            @close="handleDelTag(index)"
+          >
+            {{tag}}
+          </el-tag>
+        </div>
+      </el-form-item>
       <el-form-item label="项目Logo:">
         <upload :fileList.sync="project.logo" :limit="1" />
       </el-form-item>
+      <el-form-item>
+        <el-button @click="close">取 消</el-button>
+        <el-button type="primary" @click="submit">确 定</el-button>
+      </el-form-item>
     </el-form>
-    <div slot="footer" class="dialog-footer">
-      <el-button @click="close">取 消</el-button>
-      <el-button type="primary" @click="submit">确 定</el-button>
-    </div>
   </el-dialog>
 </template>
 
@@ -54,6 +71,7 @@ export default {
       name: '',
       desc: '',
       dirName: '',
+      types: [],
       logo: []
     }, this.item)
 
@@ -67,7 +85,8 @@ export default {
         ]
       },
       project: current,
-      imgSrc: "http://terminus-paas.oss-cn-hangzhou.aliyuncs.com/upload/images/fd479181-7e85-41a1-a524-dcb46132ba57.jpg"
+      imgSrc: "http://terminus-paas.oss-cn-hangzhou.aliyuncs.com/upload/images/fd479181-7e85-41a1-a524-dcb46132ba57.jpg",
+      typeName: ''
     }
   },
   watch: {
@@ -76,6 +95,7 @@ export default {
         name: '',
         desc: '',
         dirName: '',
+        types: [],
         logo: []
       }, val)
     }
@@ -86,6 +106,7 @@ export default {
         name: this.project.name,
         desc: this.project.desc,
         dirName: this.project.dirName,
+        types: this.project.types.length ? this.project.types : [],
         logo: 'http://terminus-paas.oss-cn-hangzhou.aliyuncs.com/upload/images/fd479181-7e85-41a1-a524-dcb46132ba57.jpg'
       }
 
@@ -95,25 +116,25 @@ export default {
 
       if (this.project._id) {
         params._id = this.project._id
-
-        editProject(params).then(res => {
-          if (res.success) {
-            this.$emit('refresh')
-            this.close()
-          } else {
-            this.$message.error(res.message)
-          }
-        })
-      } else {
-        addProject(params).then(res => {
-          if (res.success) {
-            this.$emit('refresh')
-            this.close()
-          } else {
-            this.$message.error(res.message)
-          }
-        })
       }
+
+      addProject(params).then(res => {
+        if (res.success) {
+          this.$emit('refresh')
+          this.close()
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    },
+    handlePushType() {
+      if (this.typeName.length && this.typeName.trim().length) {
+        this.project.types.push(this.typeName)
+        this.typeName = ''
+      }
+    },
+    handleDelTag(index) {
+      this.project.types.splice(index, 1)
     },
     close () {
       this.$emit('update:visible', false)
@@ -123,5 +144,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+  .tag-box {
+    .el-tag {
+      margin: 2px;
+    }
+  }
 </style>

@@ -68,6 +68,7 @@ export default {
         name: item.name,
         desc: item.desc,
         dirName: item.dirName,
+        types: item.types && item.types.length ? item.types : [],
         logo: [
           {
             url: item.logo.indexOf('http') > -1 ? item.logo : this.imgSrc
