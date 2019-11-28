@@ -7,7 +7,7 @@ const data = [
 
 export default [
   {
-    url: '/project/list',
+    url: '/project',
     type: 'get',
     response: config => {
       return {
