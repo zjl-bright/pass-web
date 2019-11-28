@@ -21,7 +21,7 @@
       <el-form-item prop="dirName" label="目录名称:">
         <el-input v-model="project.dirName" placeholder="请输入目录名称" />
       </el-form-item>
-      <el-form-item label="环境">
+      <el-form-item label="环境:">
         <el-input v-model="typeName" placeholder="请输入环境名称" >
           <el-button slot="append" @click="handlePushType">添加</el-button>
         </el-input>
@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { addProject, editProject } from '@/api/project'
+import { addProject, updateProject } from '@/api/project'
 import upload from '@/components/common/upload'
 
 export default {
@@ -120,6 +120,12 @@ export default {
 
       addProject(params).then(res => {
         if (res.success) {
+          this.$notify({
+            title: "Success",
+            message: "新增成功!",
+            type: "success",
+            duration: 2000
+          })
           this.$emit('refresh')
           this.close()
         } else {

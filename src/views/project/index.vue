@@ -10,7 +10,7 @@
       />
     </div>
     <div class="project-container">
-      <a v-for="(item, index) in project" :key="index" class="project-item" href="/#/project/module">
+      <a v-for="(item, index) in project" :key="index" class="project-item" :href="'/#/project/module?projectId=' + item._id">
         <el-card shadow="hover">
           <div slot="header" class="clearfix">
             <div class="project-item-title">
@@ -96,7 +96,7 @@ export default {
             this.$message.error(res.message)
           }
         })
-        .catch(err => { console.log(err) })
+        .catch(err => { })
     }
   }
 }

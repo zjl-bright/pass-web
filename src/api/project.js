@@ -15,7 +15,7 @@ export function addProject(data) {
   })
 }
 
-export function editProject(data) {
+export function updateProject(data) {
   return request({
     url: '/project',
     method: 'put',
