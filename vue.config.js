@@ -1,13 +1,14 @@
 'use strict'
 const path = require('path')
 const defaultSettings = require('./src/settings.js')
+const ipconfig = require('./ipconfig.js')
 
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
 const name = defaultSettings.title || 'vue Admin Template' // page title
-const port = 9528 // dev port
+const port = process.env.port || process.env.npm_config_port || ipconfig.env.port || 9528 // dev port
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
@@ -34,7 +35,7 @@ module.exports = {
       // change xxx-api/login => mock/login
       // detail: https://cli.vuejs.org/config/#devserver-proxy
       [process.env.VUE_APP_ADMIN_API]: {
-        target: `http://192.168.10.47:8256`,
+        target: `http://${ipconfig.env.backendHost}:${ipconfig.env.backendPort}`,
         changeOrigin: true
       },
       [process.env.VUE_APP_BASE_API]: {
