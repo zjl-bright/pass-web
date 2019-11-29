@@ -67,7 +67,7 @@ export default {
         _id: item._id,
         name: item.name,
         desc: item.desc,
-        dirName: item.dirName,
+        dir: item.dir,
         types: item.types && item.types.length ? item.types : [],
         logo: [
           {

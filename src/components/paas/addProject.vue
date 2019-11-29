@@ -18,8 +18,8 @@
       <el-form-item prop="desc" label="项目简介:">
         <el-input v-model="project.desc" type="textarea" placeholder="请输入项目描述" maxlength="100" show-word-limit />
       </el-form-item>
-      <el-form-item prop="dirName" label="目录名称:">
-        <el-input v-model="project.dirName" placeholder="请输入目录名称" />
+      <el-form-item prop="dir" label="目录名称:">
+        <el-input v-model="project.dir" placeholder="请输入目录名称" />
       </el-form-item>
       <el-form-item label="环境:">
         <el-input v-model="typeName" placeholder="请输入环境名称" >
@@ -70,7 +70,7 @@ export default {
     let current = Object.assign({
       name: '',
       desc: '',
-      dirName: '',
+      dir: '',
       types: [],
       logo: []
     }, this.item)
@@ -80,7 +80,7 @@ export default {
         name: [
           { required: true, message: '', trigger: 'blur' }
         ],
-        dirName: [
+        dir: [
           { required: true, message: '', trigger: 'blur' }
         ]
       },
@@ -94,7 +94,7 @@ export default {
       this.project = Object.assign({
         name: '',
         desc: '',
-        dirName: '',
+        dir: '',
         types: [],
         logo: []
       }, val)
@@ -105,7 +105,7 @@ export default {
       let params = {
         name: this.project.name,
         desc: this.project.desc,
-        dirName: this.project.dirName,
+        dir: this.project.di,
         types: this.project.types.length ? this.project.types : [],
         logo: 'http://terminus-paas.oss-cn-hangzhou.aliyuncs.com/upload/images/fd479181-7e85-41a1-a524-dcb46132ba57.jpg'
       }
