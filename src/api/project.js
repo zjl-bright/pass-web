@@ -25,7 +25,7 @@ export function updateProject(data) {
 
 export function delProject(id) {
   return request({
-    url: `/project?_id=${id}`,
+    url: `/project/${id}`,
     method: 'delete'
   })
 }

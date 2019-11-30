@@ -1,19 +1,14 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-text">name: {{ name }}</div>
-    <FlipClock />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import FlipClock from '@/components/common/FlipClock'
 
 export default {
   name: 'Dashboard',
-  components: {
-    FlipClock
-  },
   computed: {
     ...mapGetters([
       'name'

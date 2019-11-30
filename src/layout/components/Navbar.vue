@@ -5,6 +5,7 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
+      <!-- <FlipClock class="okey-dokey" /> -->
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
@@ -29,11 +30,13 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+// import FlipClock from '@/components/common/FlipClock'
 
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
+    // FlipClock
   },
   computed: {
     ...mapGetters([
@@ -82,6 +85,7 @@ export default {
     float: right;
     height: 100%;
     line-height: 50px;
+    display: flex;
 
     &:focus {
       outline: none;

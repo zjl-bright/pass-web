@@ -9,6 +9,7 @@ function resolve(dir) {
 
 const name = defaultSettings.title || 'vue Admin Template' // page title
 const port = process.env.port || process.env.npm_config_port || ipconfig.env.port || 9528 // dev port
+const targetUrl = ipconfig.env.backendUrl ? ipconfig.env.backendUrl : `http://${ipconfig.env.backendHost}:${ipconfig.env.backendPort}`
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
@@ -35,7 +36,7 @@ module.exports = {
       // change xxx-api/login => mock/login
       // detail: https://cli.vuejs.org/config/#devserver-proxy
       [process.env.VUE_APP_ADMIN_API]: {
-        target: `http://${ipconfig.env.backendHost}:${ipconfig.env.backendPort}`,
+        target: targetUrl,
         changeOrigin: true
       },
       [process.env.VUE_APP_BASE_API]: {

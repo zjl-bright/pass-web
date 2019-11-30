@@ -105,7 +105,7 @@ export default {
       let params = {
         name: this.project.name,
         desc: this.project.desc,
-        dir: this.project.di,
+        dir: this.project.dir,
         types: this.project.types.length ? this.project.types : [],
         logo: 'http://terminus-paas.oss-cn-hangzhou.aliyuncs.com/upload/images/fd479181-7e85-41a1-a524-dcb46132ba57.jpg'
       }

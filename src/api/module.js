@@ -1,10 +1,9 @@
 import request from '@/utils/request'
 
-export function getModule(params) {
+export function getModule(id) {
   return request({
-    url: '/part',
-    method: 'get',
-    params
+    url: `/part/${id}`,
+    method: 'get'
   })
 }
 

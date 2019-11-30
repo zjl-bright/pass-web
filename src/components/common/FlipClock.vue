@@ -113,6 +113,12 @@ export default {
 .FlipClock {
   text-align: center;
 
+  &.okey-dokey {
+    zoom: 0.3;
+    text-align: left;
+    margin-right: 120px;
+  }
+
   &.M-Flipper {
     margin: 0 3px;
   }

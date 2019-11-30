@@ -98,10 +98,9 @@ export default {
   },
   methods: {
     render() {
-      const params = {
-        projectId: this.$route.query.projectId
-      }
-      getModule(params).then(res => {
+      const projectId = this.$route.query.projectId
+
+      getModule(projectId).then(res => {
         if (res.success) {
           // console.log(res.result)
           this.part = res.result
