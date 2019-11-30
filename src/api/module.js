@@ -25,7 +25,7 @@ export function updateModule(data) {
 
 export function delModule(id) {
   return request({
-    url: `/part?_id=${id}`,
+    url: `/part/${id}`,
     method: 'delete'
   })
 }
