@@ -29,3 +29,10 @@ export function delModule(id) {
     method: 'delete'
   })
 }
+
+export function packageModule(params) {
+  return request({
+    url: `/module/package?_id=${params.moduleId}&branchName=${params.branchName}&ip=${params.ip}`,
+    method: 'get'
+  })
+}

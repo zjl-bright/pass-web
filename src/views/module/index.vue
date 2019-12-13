@@ -8,6 +8,7 @@
       <add-part-dialog
         v-if="addPartDialogVisible"
         :visible.sync="addPartDialogVisible"
+        :part="currentPart"
         @refresh="render"
       />
     </div>
@@ -19,6 +20,7 @@
       @addModule="addModule"
       @refresh="render"
       @updateEnv="updateEnv"
+      @updatePart="updatePartBaseInfo"
     />
 
     <!-- maintain-env-dialog -->
@@ -31,7 +33,8 @@
     <!-- add-module-dialog -->
     <add-module-dialog
       :visible.sync="addModuleDialogVisible"
-      :partId="currentPartId"
+      :module="currentModule"
+      @refresh="render"
     />
   </div>
 </template>
@@ -53,7 +56,7 @@ export default {
   data() {
     return {
       part: [],
-      currentPartId: '',
+      currentModule: {},
       listLoading: true,
       addPartDialogVisible: false,
       addModuleDialogVisible: false,
@@ -70,7 +73,6 @@ export default {
 
       getPart(projectId).then(res => {
         if (res.success) {
-          // console.log(res.result)
           this.part = res.result
           this.listLoading = false
         } else {
@@ -93,11 +95,16 @@ export default {
         }
       })
     },
+    updatePartBaseInfo(data) {
+      this.currentPart = data
+      this.addPartDialogVisible = true
+    },
     handleAddPart() {
+      this.currentPart = {}
       this.addPartDialogVisible = true
     },
     addModule(data) {
-      this.currentPartId = data.id
+      this.currentModule = data
       this.addModuleDialogVisible = true
     },
     updateEnv(part) {

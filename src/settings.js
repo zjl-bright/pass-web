@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'HSH PaaS',
+  title: 'Paas Web',
 
   /**
    * @type {boolean} true | false

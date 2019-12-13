@@ -107,12 +107,11 @@ export default {
         params["envs"].push(formData)
       }
 
-      console.log(params)
       this.$emit('updatePart', params)
+      this.addEnvVisible = false
     },
     // env
     editEnvItem(row) {
-      console.log(row)
       this.form = row
       this.envType = 'edit'
       this.addEnvVisible = true
@@ -121,7 +120,6 @@ export default {
       const params = JSON.parse(JSON.stringify(this.curPart))
       params["envs"].splice(index, 1)
 
-      console.log(params)
       this.$emit('updatePart', params)
     },
     close() {

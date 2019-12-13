@@ -30,46 +30,68 @@
 </template>
 
 <script>
-import { addPart } from '@/api/part'
+import { addPart, updatePart } from '@/api/part'
 
 export default {
   props: {
     visible: {
       type: Boolean,
       default: false
+    },
+    part: {
+      type: Object
     }
   },
   data() {
+    const part = Object.assign({
+      name: '',
+      gitPath: '',
+      cmd: '',
+      envs: [],
+      modules: [],
+      projectId: this.$route.query.projectId
+    }, JSON.parse(JSON.stringify(this.part)))
+
     return {
       rules: {
 
       },
-      partForm: {
-        name: '',
-        gitPath: '',
-        cmd: '',
-        envs: [],
-        modules: [],
-        projectId: this.$route.query.projectId
-      }
+      partForm: part
     }
   },
   methods: {
     submit() {
-      addPart(this.partForm).then(res => {
-        if (res.success) {
-          this.$notify({
-            title: "Success",
-            message: "新增成功!",
-            type: "success",
-            duration: 2000
-          })
-          this.$emit("refresh")
-          this.close()
-        } else {
-          this.$message.error(res.message)
-        }
-      })
+      if (!this.partForm._id) {
+        addPart(this.partForm).then(res => {
+          if (res.success) {
+            this.$notify({
+              title: "Success",
+              message: "新增成功!",
+              type: "success",
+              duration: 2000
+            })
+            this.$emit("refresh")
+            this.close()
+          } else {
+            this.$message.error(res.message)
+          }
+        })
+      } else {
+        updatePart(this.partForm).then(res => {
+          if (res.success) {
+            this.$notify({
+              title: "Success",
+              message: "修改成功!",
+              type: "success",
+              duration: 2000
+            })
+            this.$emit("refresh")
+            this.close()
+          } else {
+            this.$message.error(res.message)
+          }
+        })
+      }
     },
     close() {
       this.$emit('update:visible', false)

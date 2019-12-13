@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="添加模块"
+    :title="title"
     :visible="visible"
     width="520px"
     @close="close"
@@ -38,38 +38,51 @@ export default {
       type: Boolean,
       default: false
     },
-    partId: {
-      type: String
+    module: {
+      type: Object
     }
   },
   data() {
+    const form = Object.assign({
+      partId: this.module.id,
+      name: '',
+      target: '',
+      cmd: ''
+    }, JSON.parse(JSON.stringify(this.module)))
+
     return {
       rules: {
 
       },
-      moduleForm: {
-        partId: this.partId,
-        name: '',
-        target: '',
-        cmd: ''
-      }
+      moduleForm: form
+    }
+  },
+  computed: {
+    title() {
+      return this.moduleForm._id ? '修改配置' : '添加模块' 
     }
   },
   watch: {
-    partId(val) {
-      this.moduleForm.partId = val
+    module(val) {
+      this.moduleForm = Object.assign({
+        partId: val.id,
+        name: '',
+        target: '',
+        cmd: ''
+      }, JSON.parse(JSON.stringify(val)))
     }
   },
   methods: {
     submit() {
-      console.log(this.moduleForm)
-      // const params = {
-      //   _id: this.moduleForm.partId,
-      //   modules: [
-      //     this.moduleForm
-      //   ]
-      // }
+      const params = JSON.parse(JSON.stringify(this.moduleForm))
       
+      addModule(params).then(res => {
+        if (res.success) {
+          this.$emit('refresh')
+        } else {
+          this.$message.error(res.message)
+        }
+      })
     },
     close() {
       this.$emit('update:visible', false)

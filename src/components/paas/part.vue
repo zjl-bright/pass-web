@@ -1,7 +1,7 @@
 <template>
   <div class="part-container">
     <div class="part-container-head">
-      <div class="part-container-head__name" :style="{ background: getColor(index) }">
+      <div class="part-container-head__name" :style="{ background: getColor(index) }" @click="handleUpdatePart">
         <i :class="getIcon(index)"></i>&nbsp;
         {{ part.name }}
       </div>
@@ -12,6 +12,7 @@
         <!-- <span>当前所选环境:</span> -->
         <el-select
           v-model="currentEnv"
+          value-key="name"
           size="mini"
           placeholder="环境"
           style="width: 100px;"
@@ -20,7 +21,7 @@
             v-for="(item, index) in part.envs"
             :key="index"
             :label="item.name"
-            :value="item.branchName"
+            :value="item"
           ></el-option>
         </el-select>
         <i class="el-icon-setting" @click="handleSettingEnv"></i>
@@ -33,7 +34,18 @@
     <div class="part-container-body">
       <ul>
         <li v-for="item in part.modules" :key="item._id">
-          {{ item.name }}
+          <div class="left-box">
+            <span class="module-name">{{ item.name }}</span><br/>
+            <span class="module-path">path: {{ item.target }}</span>
+          </div>
+          <div class="right-box">
+            <span class="btn-box">
+              <span class="span-btn" @click="handleSetModule(item)">配置</span>
+              <span class="span-btn" @click="handlePackage(item._id)">打包</span>
+              <span class="span-btn" @click="handlePublish(item._id)">部署</span>
+              <span class="span-btn delete" @click="handleDel(item._id)">移除</span>
+            </span>
+          </div>
         </li>
       </ul>
     </div>
@@ -42,6 +54,7 @@
 
 <script>
 import { delPart } from '@/api/part'
+import { delModule, packageModule } from '@/api/module'
 export default {
   props: {
     part: {
@@ -70,10 +83,13 @@ export default {
           icon: 'el-icon-goblet-square'
         }
       ],
-      currentEnv: ''
+      currentEnv: {}
     }
   },
   methods: {
+    handleUpdatePart() {
+      this.$emit('updatePart', this.part)
+    },
     handleAddModule() {
       this.$emit('addModule', {
         id: this.part._id
@@ -111,6 +127,68 @@ export default {
         })
         .catch(err => { })
     },
+    // module
+    handleSetModule(item) {
+      this.$emit('addModule', item)
+    },
+    handlePackage(id) {
+      if (this.currentEnv.name) {
+        const params = {
+          moduleId: id,
+          branchName: this.currentEnv.branchName,
+          ip: this.currentEnv.ip
+        }
+
+        packageModule(params).then(res => {
+          if (res.success) {
+            this.$notify({
+              title: "Success",
+              message: "开始打包...",
+              type: "success",
+              duration: 2000
+            })
+          } else {
+            this.$message.error(res.message)
+          }
+        })
+      } else {
+        this.$message({
+          message: '请选择对应的打包环境',
+          type: 'warning'
+        })
+      }
+    },
+    handlePublish(id) {
+      // console.log(id)
+      this.$message('todo')
+    },
+    handleDel(id) {
+      const _this = this
+
+      this.$confirm('确认删除该模块?', 'Confirm', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          _this.confirmDelModule(id)
+        })
+        .catch(err => { })
+    },
+    confirmDelModule(id) {
+      delModule(id).then(res => {
+        if (res.success) {
+          this.$notify({
+            title: "Success",
+            message: "删除成功",
+            type: "success",
+            duration: 2000
+          })
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    },
     getColor(index) {
       return this.theme[index % this.theme.length].color
     },
@@ -128,7 +206,7 @@ export default {
     border-radius: 6px;
     position: relative;
     margin: 20px;
-    padding: 0 20px 20px;
+    padding: 0 20px 20px 0;
 
     &-head {
       display: flex;
@@ -203,6 +281,48 @@ export default {
     &-body {
       position: relative;
       padding: 20px 0 15px 20px;
+
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0 20px;
+        font-size: 14px;
+
+        li {
+          position: relative;
+          padding: 20px 0 15px 20px;
+          color: #606266;
+
+          .left-box {
+            .module-name {
+              line-height: 24px;
+              font-weight: bold;
+            }
+          }
+
+          .right-box {
+            position: absolute;
+            right: 0;
+            top: 30px;
+            color: #909399;
+
+            .span-btn {
+              margin: 0 5px;
+              cursor: pointer;
+
+              &:hover {
+                color: #409EFF;
+              }
+
+              &.delete {
+                &:hover {
+                  color: #F56C6C;
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 </style>
