@@ -9,17 +9,17 @@
       ref="addPartForm"
       label-position="right"
       label-width="100px"
-      :model="moduleForm"
+      :model="partForm"
       :rules="rules"
     >
       <el-form-item prop="name" label="应用名称:">
-        <el-input v-model="moduleForm.name" placeholder="请输入应用单元名称" />
+        <el-input v-model="partForm.name" placeholder="请输入应用单元名称" />
       </el-form-item>
       <el-form-item prop="gitPath" label="代码库:">
-        <el-input v-model="moduleForm.gitPath" placeholder="请输入git地址" />
+        <el-input v-model="partForm.gitPath" placeholder="请输入git地址" />
       </el-form-item>
       <el-form-item prop="cmd" label="cmd:">
-        <el-input v-model="moduleForm.cmd" type="textarea" placeholder="请输入打包命令" maxlength="200" />
+        <el-input v-model="partForm.cmd" type="textarea" placeholder="请输入打包命令" maxlength="200" />
       </el-form-item>
       <el-form-item>
         <el-button @click="close">取消</el-button>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { addModule } from '@/api/module'
+import { addPart } from '@/api/part'
 
 export default {
   props: {
@@ -44,7 +44,7 @@ export default {
       rules: {
 
       },
-      moduleForm: {
+      partForm: {
         name: '',
         gitPath: '',
         cmd: '',
@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     submit() {
-      addModule(this.moduleForm).then(res => {
+      addPart(this.partForm).then(res => {
         if (res.success) {
           this.$notify({
             title: "Success",

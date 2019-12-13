@@ -1,31 +1,31 @@
 import request from '@/utils/request'
 
-export function getModule(id) {
+export function getPart(id) {
   return request({
-    url: `/module/${id}`,
+    url: `/part/${id}`,
     method: 'get'
   })
 }
 
-export function addModule(data) {
+export function addPart(data) {
   return request({
-    url: '/module',
+    url: '/part',
     method: 'post',
     data
   })
 }
 
-export function updateModule(data) {
+export function updatePart(data) {
   return request({
-    url: '/module',
+    url: '/part',
     method: 'put',
     data
   })
 }
 
-export function delModule(id) {
+export function delPart(id) {
   return request({
-    url: `/module/${id}`,
+    url: `/part/${id}`,
     method: 'delete'
   })
 }

@@ -3,7 +3,7 @@
     <div class="page-title">
       <span>应用列表</span>
       <span class="btn-box">
-        <el-button size="mini" @click="addPart" plain>添加应用</el-button>
+        <el-button size="mini" @click="handleAddPart" plain>添加应用</el-button>
       </span>
       <add-part-dialog
         v-if="addPartDialogVisible"
@@ -18,6 +18,14 @@
       :index="index"
       @addModule="addModule"
       @refresh="render"
+      @updateEnv="updateEnv"
+    />
+
+    <!-- maintain-env-dialog -->
+    <update-env-dialog
+      :visible.sync="updateEnvDialogVisible"
+      :part="currentPart"
+      @updatePart="updatePart"
     />
 
     <!-- add-module-dialog -->
@@ -73,16 +81,18 @@
 </template>
 
 <script>
-import { getModule } from '@/api/module'
+import { getPart, addPart } from '@/api/part'
 import addPartDialog from '@/components/paas/addPart'
 import addModuleDialog from '@/components/paas/addModule'
 import partContainer from '@/components/paas/part'
+import updateEnvDialog from '@/components/paas/env'
 
 export default {
   components: {
     addPartDialog,
     partContainer,
-    addModuleDialog
+    addModuleDialog,
+    updateEnvDialog
   },
   data() {
     return {
@@ -90,7 +100,9 @@ export default {
       currentPartId: '',
       listLoading: true,
       addPartDialogVisible: false,
-      addModuleDialogVisible: false
+      addModuleDialogVisible: false,
+      currentPart: {},
+      updateEnvDialogVisible: false
     }
   },
   created() {
@@ -100,7 +112,7 @@ export default {
     render() {
       const projectId = this.$route.query.projectId
 
-      getModule(projectId).then(res => {
+      getPart(projectId).then(res => {
         if (res.success) {
           // console.log(res.result)
           this.part = res.result
@@ -110,12 +122,31 @@ export default {
         }
       })
     },
-    addPart() {
+    updatePart(params) {
+      addPart(params).then(res => {
+        if (res.success) {
+          this.$notify({
+            title: "Success",
+            message: "修改成功!",
+            type: "success",
+            duration: 2000
+          })
+          this.render()
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    },
+    handleAddPart() {
       this.addPartDialogVisible = true
     },
     addModule(data) {
       this.currentPartId = data.id
       this.addModuleDialogVisible = true
+    },
+    updateEnv(part) {
+      this.currentPart = part
+      this.updateEnvDialogVisible = true
     }
   }
 }

@@ -15,11 +15,8 @@
       <el-form-item prop="name" label="模块名称:">
         <el-input v-model="moduleForm.name" placeholder="请输入模块名称" />
       </el-form-item>
-      <el-form-item prop="targetPath" label="目标路径:">
-        <el-input v-model="moduleForm.targetPath" placeholder="请输入目标路径" />
-      </el-form-item>
-      <el-form-item prop="dirPath" label="目录路径">
-        <el-input v-model="moduleForm.dirPath" placeholder="请输入目录路径" />
+      <el-form-item prop="target" label="目标路径:">
+        <el-input v-model="moduleForm.target" placeholder="请输入目标路径" />
       </el-form-item>
       <el-form-item prop="cmd" label="打包命令">
         <el-input v-model="moduleForm.cmd" type="textarea" placeholder="请输入打包命令" maxlength="200" />
@@ -53,8 +50,7 @@ export default {
       moduleForm: {
         partId: this.partId,
         name: '',
-        targetPath: '',
-        dirPath: '',
+        target: '',
         cmd: ''
       }
     }
@@ -73,7 +69,7 @@ export default {
       //     this.moduleForm
       //   ]
       // }
-
+      
     },
     close() {
       this.$emit('update:visible', false)

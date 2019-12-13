@@ -10,9 +10,23 @@
       </div>
       <div class="part-container-head__envs">
         <!-- <span>当前所选环境:</span> -->
+        <el-select
+          v-model="currentEnv"
+          size="mini"
+          placeholder="环境"
+          style="width: 100px;"
+        >
+          <el-option
+            v-for="(item, index) in part.envs"
+            :key="index"
+            :label="item.name"
+            :value="item.branchName"
+          ></el-option>
+        </el-select>
+        <i class="el-icon-setting" @click="handleSettingEnv"></i>
       </div>
       <div class="part-container-head__btn">
-        <span class="btn-span" @click="handleAddPart">添加</span>
+        <span class="btn-span" @click="handleAddModule">添加</span>
         <span class="btn-span delete" @click="handleDelPart(part._id)">移除</span>
       </div>
     </div>
@@ -27,7 +41,7 @@
 </template>
 
 <script>
-import { delModule } from '@/api/module'
+import { delPart } from '@/api/part'
 export default {
   props: {
     part: {
@@ -42,27 +56,35 @@ export default {
       theme: [
         {
           color: '#fba254',
+          // color: 'linear-gradient(45deg, rgb(251,162,84), rgb(255,239,213), rgb(255,165,0))',
           icon: 'el-icon-coffee-cup'
         },
         {
           color: '#03A9F4',
+          // color: 'linear-gradient(45deg, rgb(31,89,146), rgb(35,175,230), rgb(29,136,203))',
           icon: 'el-icon-collection-tag'
         },
         {
           color: '#0faf14',
+          // color: 'linear-gradient(45deg, rgb(255,69,0), rgb(255,228,225), rgb(178,34,34))',
           icon: 'el-icon-goblet-square'
         }
-      ]
+      ],
+      currentEnv: ''
     }
   },
   methods: {
-    handleAddPart() {
+    handleAddModule() {
       this.$emit('addModule', {
         id: this.part._id
       })
     },
+    handleSettingEnv() {
+      const part = JSON.parse(JSON.stringify(this.part))
+      this.$emit('updateEnv', part)
+    },
     confirmDelPart(id) {
-      delModule(id).then(res => {
+      delPart(id).then(res => {
         if (res.success) {
           this.$notify({
             title: "Success",
@@ -131,6 +153,23 @@ export default {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+
+        &:hover {
+          cursor: pointer;
+          background: linear-gradient(45deg, rgb(31,89,146),rgb(35,175,230),rgb(29,136,203)) !important;
+          box-shadow: 0 0 0.2rem grey;
+        }
+      }
+
+      &__envs {
+        > i {
+          cursor: pointer;
+          color: #9e9a9a;
+
+          &:hover {
+            color: #3a8ee6;
+          }
+        }
       }
 
       &__gitPath,
