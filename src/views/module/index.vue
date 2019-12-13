@@ -25,7 +25,7 @@
     <update-env-dialog
       :visible.sync="updateEnvDialogVisible"
       :part="currentPart"
-      @updatePart="updatePart"
+      @updatePart="updatePartDetail"
     />
 
     <!-- add-module-dialog -->
@@ -33,55 +33,11 @@
       :visible.sync="addModuleDialogVisible"
       :partId="currentPartId"
     />
-
-
-    <!-- <el-table
-      v-loading="listLoading"
-      :data="backend_module"
-      element-loading-text="Loading"
-      fit
-      highlight-current-row
-    >
-      <el-table-column align="center" label="Serial" width="100">
-        <template slot-scope="scope">
-          {{ scope.$index + 1 }}
-        </template>
-      </el-table-column>
-      <el-table-column label="name">
-        <template slot-scope="scope">
-          {{ scope.row.name }}
-        </template>
-      </el-table-column>
-      <el-table-column label="path">
-        <template slot-scope="scope">
-          {{ scope.row.path }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="updateTime" width="200">
-        <template>
-          tan90°
-        </template>
-      </el-table-column>
-      <el-table-column label="operation">
-        <template slot-scope="scope">
-          <el-row :gutter="20">
-            <el-col :span="4">
-              <el-switch v-model="scope.row.available">{{ scope.row.name }}</el-switch>
-            </el-col>
-            <el-col :span="20" class="operation-container">
-              <el-link href="/#/project/config" type="info" class="module-btn">配置</el-link>
-              <el-link type="info" class="module-btn">打包</el-link>
-              <el-link type="info" class="module-btn">部署</el-link>
-            </el-col>
-          </el-row>
-        </template>
-      </el-table-column>
-    </el-table> -->
   </div>
 </template>
 
 <script>
-import { getPart, addPart } from '@/api/part'
+import { getPart, updatePart } from '@/api/part'
 import addPartDialog from '@/components/paas/addPart'
 import addModuleDialog from '@/components/paas/addModule'
 import partContainer from '@/components/paas/part'
@@ -122,8 +78,8 @@ export default {
         }
       })
     },
-    updatePart(params) {
-      addPart(params).then(res => {
+    updatePartDetail(params) {
+      updatePart(params).then(res => {
         if (res.success) {
           this.$notify({
             title: "Success",
