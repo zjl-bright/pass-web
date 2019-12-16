@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { addPart, updatePart } from '@/api/part'
+import { addPart, updatePart, clonePart } from '@/api/part'
 
 export default {
   props: {
@@ -85,6 +85,13 @@ export default {
               type: "success",
               duration: 2000
             })
+
+            if (this.part.gitPath !== this.partForm.gitPath) {
+              clonePart(this.part._id).then(res => {
+                // console.log(res)
+              })
+            }
+
             this.$emit("refresh")
             this.close()
           } else {

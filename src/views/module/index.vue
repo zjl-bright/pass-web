@@ -1,7 +1,25 @@
 <template>
   <div class="app-container">
     <div class="page-title">
-      <span>应用列表</span>
+      <span>应用列表
+        <span v-if="envOptions && envOptions.length">
+        <el-select
+          v-model="totalEnvs"
+          size="mini"
+          placeholder="环境"
+          style="width: 100px;"
+          @change="handleChangeEnv"
+        >
+          <el-option key="10086" label="ALL" value=""></el-option>
+          <el-option
+            v-for="(item, index) in envOptions"
+            :key="index"
+            :label="item"
+            :value="item"
+          ></el-option>
+        </el-select>
+      </span>
+      </span>
       <span class="btn-box">
         <el-button size="mini" @click="handleAddPart" plain>添加应用</el-button>
       </span>
@@ -13,6 +31,7 @@
       />
     </div>
     <part-container
+      ref="partContainer"
       v-for="(item, index) in part"
       :key="item._id"
       :part="item"
@@ -25,6 +44,7 @@
 
     <!-- maintain-env-dialog -->
     <update-env-dialog
+      v-if="updateEnvDialogVisible"
       :visible.sync="updateEnvDialogVisible"
       :part="currentPart"
       @updatePart="updatePartDetail"
@@ -61,7 +81,9 @@ export default {
       addPartDialogVisible: false,
       addModuleDialogVisible: false,
       currentPart: {},
-      updateEnvDialogVisible: false
+      updateEnvDialogVisible: false,
+      envOptions: [],
+      totalEnvs: ''
     }
   },
   created() {
@@ -74,10 +96,30 @@ export default {
       getPart(projectId).then(res => {
         if (res.success) {
           this.part = res.result
+
+          this.initEnvSelect(res.result)
+
           this.listLoading = false
         } else {
           this.$message.error(res.message)
         }
+      })
+    },
+    initEnvSelect(data) {
+      const map = new Set()
+      data.forEach(item => {
+        if (item.envs && item.envs.length) {
+          item.envs.forEach(j => {
+            map.add(j.name)
+          })
+        }
+      })
+
+      this.envOptions = [...map]
+    },
+    handleChangeEnv(val) {
+      this.$refs.partContainer.forEach(item => {
+        item.selectKey(val)
       })
     },
     updatePartDetail(params) {

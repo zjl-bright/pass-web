@@ -34,8 +34,10 @@
       </el-dialog>
     </div>
     <el-table
+      ref="dragTable"
       :data="curPart.envs"
       border
+      highlight-current-row
       style="width: 100%"
     >
       <el-table-column label="序号" min-width="8%">
@@ -48,7 +50,7 @@
       <el-table-column label="ip" prop="ip" min-width="25%"></el-table-column>
       <el-table-column label="操作" min-width="15%">
         <template slot-scope="scope">
-          <el-button icon="el-icon-edit" type="primary" @click="editEnvItem(scope.row)" size="mini" plain></el-button>
+          <el-button icon="el-icon-edit" type="primary" @click="editEnvItem(scope.$index, scope.row)" size="mini" plain></el-button>
           <el-button icon="el-icon-delete" type="danger" @click="delEnvItem(scope.$index)" size="mini" plain></el-button>
         </template>
       </el-table-column>
@@ -57,6 +59,8 @@
 </template>
 
 <script>
+import Sortable from 'sortablejs'
+
 export default {
   props: {
     visible: {
@@ -77,21 +81,55 @@ export default {
         branchName: '',
         ip: ''
       },
-      addEnvVisible: false
+      addEnvVisible: false,
+      sortable: null,
+      oldList: [],
+      newList: [],
+      envIndex: null
     }
   },
+  // created() {
+  //   this.render()
+  // },
   watch: {
     part(val) {
+      console.log('----env-watch-----')
+      console.log(val)
       this.curPart = JSON.parse(JSON.stringify(val))
     }
   },
   methods: {
+    // render() {
+    //   this.oldList = this.curPart.envs.map(v => v.id)
+    //   this.newList = this.oldList.slice()
+    //   this.$nextTick(() => {
+    //     this.setSort()
+    //   })
+    // },
+    // setSort() {
+    //   const el = this.$refs.dragTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
+    //   this.sortable = Sortable.create(el, {
+    //     ghostClass: 'sortable-ghost',
+    //     setData: function(dataTransfer) {
+    //       dataTransfer.setData('Text', '')
+    //     },
+    //     onEnd: evt => {
+    //       const targetRow = this.curPart.envs.splice(evt.oldIndex, 1)[0]
+    //       this.curPart.envs.splice(evt.newIndex, 0, targetRow)
+
+    //       const tempIndex = this.newList.splice(evt.oldIndex, 1)[0]
+    //       this.newList.splice(evt.newIndex, 0, tempIndex)
+    //       console.log(this.curPart.envs)
+    //     }
+    //   })
+    // },
     addEnv() {
       this.form = {
         name: '',
         branchName: '',
         ip: ''
       }
+      this.envIndex = null
       this.envType = 'create'
       this.addEnvVisible = true
     },
@@ -105,19 +143,24 @@ export default {
           ip: this.form.ip
         }
         params["envs"].push(formData)
+      } else {
+        params["envs"][this.envIndex] = this.form
       }
 
       this.$emit('updatePart', params)
+      this.curPart["envs"] = params["envs"]
       this.addEnvVisible = false
     },
     // env
-    editEnvItem(row) {
-      this.form = row
+    editEnvItem(index, row) {
+      this.form = JSON.parse(JSON.stringify(row))
+      this.envIndex = index
       this.envType = 'edit'
       this.addEnvVisible = true
     },
     delEnvItem(index) {
-      const params = JSON.parse(JSON.stringify(this.curPart))
+      // const params = JSON.parse(JSON.stringify(this.curPart))
+      const params = this.curPart
       params["envs"].splice(index, 1)
 
       this.$emit('updatePart', params)

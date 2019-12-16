@@ -1,5 +1,5 @@
 <template>
-  <div class="part-container">
+  <div v-show="partVisible" class="part-container">
     <div class="part-container-head">
       <div class="part-container-head__name" :style="{ background: getColor(index) }" @click="handleUpdatePart">
         <i :class="getIcon(index)"></i>&nbsp;
@@ -27,6 +27,7 @@
         <i class="el-icon-setting" @click="handleSettingEnv"></i>
       </div>
       <div class="part-container-head__btn">
+        <span class="btn-span" @click="handlePackagePart">打包</span>
         <span class="btn-span" @click="handleAddModule">添加</span>
         <span class="btn-span delete" @click="handleDelPart(part._id)">移除</span>
       </div>
@@ -53,7 +54,7 @@
 </template>
 
 <script>
-import { delPart } from '@/api/part'
+import { delPart, packagePart } from '@/api/part'
 import { delModule, packageModule } from '@/api/module'
 export default {
   props: {
@@ -83,7 +84,8 @@ export default {
           icon: 'el-icon-goblet-square'
         }
       ],
-      currentEnv: {}
+      currentEnv: {},
+      partVisible: true
     }
   },
   methods: {
@@ -94,6 +96,49 @@ export default {
       this.$emit('addModule', {
         id: this.part._id
       })
+    },
+    handlePackagePart() {
+      if (this.currentEnv.name) {
+        const params = {
+          partId: this.part._id,
+          branchName: this.currentEnv.branchName,
+          ip: this.currentEnv.ip
+        }
+
+        packagePart(params).then(res => {
+          if (res.success) {
+            this.$notify({
+              title: "Success",
+              message: "开始打包...",
+              type: "success",
+              duration: 2000
+            })
+          } else {
+            this.$message.error(res.message)
+          }
+        })
+      } else {
+        this.$message({
+          message: '请选择对应的打包环境',
+          type: 'warning'
+        })
+      }
+    },
+    selectKey(key) {
+      if (key) {
+        const option = this.part.envs.find(item => {
+          return item.name === key
+        })
+
+        if(option) {
+          this.currentEnv = option
+          this.partVisible = true
+        } else {
+          this.partVisible = false
+        }
+      } else {
+        this.partVisible = true
+      }
     },
     handleSettingEnv() {
       const part = JSON.parse(JSON.stringify(this.part))
@@ -184,6 +229,7 @@ export default {
             type: "success",
             duration: 2000
           })
+          this.$emit("refresh")
         } else {
           this.$message.error(res.message)
         }

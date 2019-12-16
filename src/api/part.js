@@ -29,3 +29,17 @@ export function delPart(id) {
     method: 'delete'
   })
 }
+
+export function packagePart(params) {
+  return request({
+    url: `/part/package?_id=${params.partId}&branchName=${params.branchName}&ip=${params.ip}`,
+    method: 'get'
+  })
+}
+
+export function clonePart(id) {
+  return request({
+    url: `/part/clone/${id}`,
+    method: 'get'
+  })
+}

@@ -78,6 +78,13 @@ export default {
       
       addModule(params).then(res => {
         if (res.success) {
+          this.$notify({
+            title: "Success",
+            message: `${this.moduleForm._id ? '修改成功!' : '添加成功!'}`,
+            type: "success",
+            duration: 2000
+          })
+          this.close()
           this.$emit('refresh')
         } else {
           this.$message.error(res.message)
